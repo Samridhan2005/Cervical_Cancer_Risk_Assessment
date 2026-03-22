@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cervical Cancer AI Diagnostic System</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        /* Navbar & Header */
+        .header-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 40px 0 80px 0;
+            margin-bottom: -60px;
+        }
+
+        /* Main Dashboard Card */
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* Tabs Styling */
+        .nav-pills {
+            background: #f1f5f9;
+            padding: 8px;
+            border-radius: 15px;
+            display: inline-flex;
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 600;
+            color: #64748b;
+            transition: 0.3s;
+        }
+
+        .nav-pills .nav-link.active {
+            background: white;
+            color: #764ba2 !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Form Controls */
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            background-color: #fcfcfc;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Predict Button */
+        .btn-predict {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+            color: white;
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+            color: white;
+        }
+
+        /* Result Section */
+        .result-box {
+            background-color: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px dashed #cbd5e1;
+        }
+
+        .progress {
+            height: 35px;
+            border-radius: 10px;
+            background-color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        /* Chart Images */
+        .analysis-img {
+            border-radius: 15px;
+            transition: 0.4s;
+            cursor: zoom-in;
+            border: 1px solid #e2e8f0;
+        }
+
+        .analysis-img:hover {
+            transform: scale(1.02);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section text-center">
+        <div class="container">
+            <h1 class="fw-bold"><i class="fas fa-microscope me-2"></i>HealthCare AI Dashboard</h1>
+            <p class="opacity-75">Advanced Cervical Cancer Risk Analytics & Diagnostic Intelligence</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            
+            <div class="text-center mb-5">
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab1" data-bs-toggle="pill" data-bs-target="#content1" type="button"><i class="fas fa-clipboard-check me-2"></i>Assessment</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab2" data-bs-toggle="pill" data-bs-target="#content2" type="button"><i class="fas fa-chart-line me-2"></i>Analysis</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab3" data-bs-toggle="pill" data-bs-target="#content3" type="button"><i class="fas fa-heartbeat me-2"></i>Prevention</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-how-it-works"><i class="fas fa-brain me-2"></i>How AI Predicts</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tab-content">
+                
+                <div class="tab-pane fade show active" id="content1" role="tabpanel">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <form action="/predict" method="post" class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Patient Age</label>
+                                    <input type="number" name="Age" class="form-control" required placeholder="Enter Age">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">IUD Usage (Total Years)</label>
+                                    <input type="text" name="IUD (years)" class="form-control" placeholder="e.g. 0.5">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Hormonal Contraceptives (Years)</label>
+                                    <input type="text" name="Hormonal Contraceptives (years)" class="form-control" placeholder="e.g. 2">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Number of Pregnancies</label>
+                                    <input type="number" name="Num of pregnancies" class="form-control" placeholder="0">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Smoking History (Years)</label>
+                                    <input type="text" name="Smokes (years)" class="form-control" placeholder="0">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Previous Cancer Diagnosis (Dx: 0/1)</label>
+                                    <input type="number" name="Dx" class="form-control" placeholder="0 or 1">
+                                </div>
+                                <div class="col-12 text-center mt-5">
+                                    <button type="submit" class="btn btn-predict w-50">Generate AI Analysis</button>
+                                </div>
+                            </form>
+
+                            {% if prediction_text %}
+                            <div class="result-box text-center shadow-sm">
+                                <h2 id="resTitle" class="fw-bold mb-3">{{ prediction_text }}</h2>
+                                <p class="text-muted">The AI model has calculated a <strong>{{ risk_score }}%</strong> risk probability based on provided metrics.</p>
+                                
+                                <div class="progress my-4 shadow-sm">
+                                    <div id="resBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar">
+                                        {{ risk_score }}%
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <a href="/download_report" class="btn btn-dark px-4 py-2 rounded-pill shadow-sm">
+                                        <i class="fas fa-file-pdf me-2"></i>Download Medical Report
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="content2" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-md-6 text-center">
+                            <h6 class="fw-bold text-muted mb-3 uppercase small">Performance Matrix</h6>
+                            <img src="/static/confusion_matrix.png" class="img-fluid analysis-img shadow-sm" alt="Confusion Matrix">
+                            <p class="mt-3 small px-3">Confusion matrix helps evaluate the model's ability to distinguish between high-risk and normal patients.</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <h6 class="fw-bold text-muted mb-3 uppercase small">Key Risk Predictors</h6>
+                            <img src="/static/feature_importance.png" class="img-fluid analysis-img shadow-sm" alt="Feature Importance">
+                            <p class="mt-3 small px-3">Identifies which clinical features (e.g., Dx, Age) most heavily influenced the AI prediction.</p>
+                        </div>
+                        
+                        <div class="col-12 mt-4">
+                            <div class="table-responsive p-3 bg-light rounded-4">
+                                <table class="table table-borderless align-middle mb-0">
+                                    <thead class="text-muted small uppercase">
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Value</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="fw-500">
+                                        <tr>
+                                            <td><span class="badge bg-primary px-3">Accuracy</span></td>
+                                            <td>94.2%</td>
+                                            <td class="small">Overall correctness of the model across all cases.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge bg-info px-3">Algorithm</span></td>
+                                            <td>Random Forest</td>
+                                            <td class="small">Ensemble learning method using 200 decision trees.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="content3" role="tabpanel">
+                    <div class="row p-3">
+                        <div class="col-md-6 mb-4">
+                            <h5 class="text-primary fw-bold"><i class="fas fa-shield-virus me-2"></i>Preventive Care</h5>
+                            <p class="small text-muted">Early detection is the most effective way to prevent cervical cancer complications.</p>
+                            <ul class="list-group list-group-flush small">
+                                <li class="list-group-item bg-transparent"><i class="fas fa-check-circle text-success me-2"></i><strong>HPV Vaccination:</strong> Protects against the most common cancer-causing HPV types.</li>
+                                <li class="list-group-item bg-transparent"><i class="fas fa-check-circle text-success me-2"></i><strong>Regular Pap Smears:</strong> Recommended every 3 years for women aged 21-65.</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-warning border-0 shadow-sm rounded-4 p-4">
+                                <h6 class="fw-bold text-dark"><i class="fas fa-exclamation-triangle me-2"></i>Clinical Disclaimer</h6>
+                                <p class="small mb-0 opacity-75">This tool uses a machine learning model trained on the UCI Cervical Cancer dataset. It provides risk estimates, not a medical diagnosis. Please consult a qualified physician for clinical validation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab-how-it-works">
+    <div class="p-4">
+        <h5 class="text-primary fw-bold mb-4">Inside the AI Decision Process</h5>
+        <div class="row">
+            <div class="col-md-7">
+                <p>Our system utilizes the <strong>Random Forest Algorithm</strong>. 
+                    It constructs an ensemble of 200 individual <strong>Decision Trees</strong>. 
+                    Each tree analyzes your clinical data independently and casts a "vote" for the risk category. 
+                    The final probability is the consensus across this entire forest.</p>
+                
+                
+                
+                <!-- <div class="alert alert-light border shadow-sm">
+                    <h6>Current Case Logic:</h6>
+                    <ul>
+                        {% for line in explanation %}
+                        <li class="small text-danger fw-bold">{{ line }}</li>
+                        {% endfor %}
+                    </ul>
+                </div> -->
+            </div>
+            <div class="col-md-5">
+                <div class="card p-3 bg-dark text-white rounded-4">
+                    <h6>Technical Flow:</h6>
+                    <ol class="small">
+                        <li>User inputs mapped to 30+ features.</li>
+                        <li>Missing values handled via safe defaults.</li>
+                        <li>Random Forest votes across 200 trees.</li>
+                        <li>Probability score calculated (0-100%).</li>
+                        <li>Final Classification based on 10% sensitivity.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 AI Health Systems | Project POD 4 | Designed for Medical Analytics
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var score = "{{ risk_score }}";
+            var color = "{{ res_color }}";
+            
+            if (score && score !== "") {
+                var bar = document.getElementById('resBar');
+                var title = document.getElementById('resTitle');
+                
+                if (bar) {
+                    bar.style.width = score + "%";
+                    bar.style.backgroundColor = color;
+                    bar.classList.add('shadow-sm');
+                }
+                if (title) {
+                    title.style.color = color;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
